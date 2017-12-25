@@ -5,16 +5,16 @@ from master import *
 import os, sys
 
 
-# Stores simplified message text in file as
-# Name, DELIMITER, message text
 # ENCODING = 'ISO-8859-1'
 
-# Fetch the entire conversation contained in file
-# div 'thread' class contains everything
 def process_html_to_chatlog(readfiles, writefile, delimiter=CHAT_DELIMITER,
                             verbose=True):
     """
-    Convert HTML to readable text chatlog.
+    Fetch the entire conversation contained in HTML file to
+    convert to readable text chatlog.
+
+    Stores simplified message text in file as
+    Name - DELIMITER - message text
     """
     ####################################
     print('Cleaning HTML...')
@@ -45,7 +45,8 @@ def process_html_to_chatlog(readfiles, writefile, delimiter=CHAT_DELIMITER,
     chat_html = parse(os.path.join(readpath, readfile_clean)).getroot()
     main_classes = chat_html.find_class('thread')
 
-    # Fetch all the messages from HTML
+    # Fetch all the messages from HTML;
+    # div 'thread' class contains everything
     messages, names = [], []
     for i, thread_class in enumerate(main_classes):
         user = thread_class.find_class('user')

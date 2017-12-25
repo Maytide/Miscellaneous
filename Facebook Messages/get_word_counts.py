@@ -100,7 +100,7 @@ def get_word_counts(readfile, writefile, delimiter=CHAT_DELIMITER,
     print('Done processing word counts.')
     print('Writing to wordcount log...')
 
-    chatlog_word_count_file = open(os.path.join(writepath, writefile), encoding='utf-8', mode='w')
+    chatlog_word_count_file = open(os.path.join(writepath, writefile), encoding=ENCODING, mode='w')
 
     # Convert the dict of words to a list, then write the list in
     # order of most used -> least used words to the

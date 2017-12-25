@@ -44,6 +44,7 @@ if __name__ == '__main__':
     chatlog = '_'.join(chatnames) + '.txt' if len(chatnames) > 1 else chatnames[0] + '.txt'
     chatlog_word_count = '_'.join(chatnames) + '_wordcount.txt' if len(chatnames) > 1 else chatnames[0] + '_wordcount.txt'
 
+    # Verbose processing by default
     print('Beginning processing...')
 
     """

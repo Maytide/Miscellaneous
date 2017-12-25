@@ -6,7 +6,7 @@ Should contain files:
 
 names.txt
 
-(How they are identified by facebook, e.g. if user1="John Doe", alt1 might be "100000XXXXXXXXX@facebook.com" which is their messenger id. Can be left blank as just a user's name.)
+(How they are identified by facebook, e.g. if user1="John Doe", alt1 might be "100000XXXXXXXXX@facebook.com" which is their messenger id. Optionally, including just the name without alts is fine also.)
 
 ```
 user1: alt1, alt2, etc  
@@ -16,7 +16,7 @@ user4: alt1, alt2, alt3, etc
 ```
 
 aliases.txt
-(How they are identified/referred to in chat, e.g. if user1="John Doe", nickname1 might be "John". One of the nicknames must be the user identifier from names.txt. An alias must be specified for each user.)  
+(How they are identified/referred to in chat, e.g. if user1="John Doe", nickname1 might be "John". One of the nicknames must be the user identifier from names.txt. An alias must be specified for each user; to disable aliasing completely, use the user's real name as their alias.)  
 ```
 alias1: user1, nickname1, nickname2, etc  
 alias2: user2, nickname1  

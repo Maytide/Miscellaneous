@@ -1,6 +1,4 @@
 # Corresponds to simulate.py in V1
-# Generates markov-chain based simulations of the chat
-# through chatlog data
 
 import os, sys
 import markovify
@@ -13,7 +11,7 @@ joke_word = '' # Replace empty strings (and not yet implemented: and unwanted wo
 def clean_text_for_markovify(readfile, user=None, writefile=None,
                              delimiter=CHAT_DELIMITER):
     """
-    Generate text file with all of a user's messages formatted
+    Output text file with all of a user's messages formatted
     in sentences on a single line, to comply with Markovify's
     preferred input method.
     """
@@ -73,9 +71,11 @@ def clean_text_for_markovify(readfile, user=None, writefile=None,
     return writefile
 
 
+"""
 # https://github.com/jsvine/markovify#extending-markovifytext
 # Use nltk's part-of-speech (POS) tagger for generating sentences
 # with more natural structure:
+"""
 class POSifiedText(markovify.Text):
     def word_split(self, sentence):
         words = re.split(self.word_split_pattern, sentence)
@@ -114,9 +114,9 @@ def simulate_chat(readfile, user=None, writefile=None, simulations=50,
 
     print('Done preparing chat simulation...')
 
-    # Generate sentences
     print('Writing markovified text.')
 
+    # Generate sentences
     message_output_file = open(os.path.join(writepath, writefile), encoding=ENCODING, mode='w')
     for i in range(simulations):
         message_output_file.write(text_generator.make_short_sentence(max_sentence_length))
