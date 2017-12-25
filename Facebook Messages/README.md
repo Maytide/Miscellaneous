@@ -2,7 +2,7 @@
 
 Generates plots of user word count and generates simulated user messages based off of user's previous messages.
 
-![](data/example_wordcount_chart.png)
+![](data/example_wordcount_chart.jpg)
 
 Example usage:
 
