@@ -22,3 +22,5 @@ alias1: user1, nickname1, nickname2, etc
 alias2: user2, nickname1  
 alias3: user3, nickname1, nickname2, nickname3, etc  
 ```
+
+Generated files/graphs will also be output here.
