@@ -71,12 +71,12 @@ def clean_text_for_markovify(readfile, user=None, writefile=None,
     return writefile
 
 
-"""
-# https://github.com/jsvine/markovify#extending-markovifytext
-# Use nltk's part-of-speech (POS) tagger for generating sentences
-# with more natural structure:
-"""
 class POSifiedText(markovify.Text):
+    """
+    https://github.com/jsvine/markovify#extending-markovifytext
+    Use nltk's part-of-speech (POS) tagger for generating sentences
+    with more natural structure:
+    """
     def word_split(self, sentence):
         words = re.split(self.word_split_pattern, sentence)
         words = [ '::'.join(tag) for tag in nltk.pos_tag(words) ]
