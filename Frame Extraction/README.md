@@ -1,0 +1,1 @@
+Use ffmpeg to extract the frames from an mp4 to images into frames/ directory

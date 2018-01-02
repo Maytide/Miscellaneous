@@ -1,1 +1,1 @@
-Based on Coursera CNN course implementation
+Colaboratory based on Coursera CNN course implementation
