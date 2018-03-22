@@ -15,6 +15,7 @@ from path import videos, readpath, writepath
 # approximate start frame for ep 1 (~2 mins in): 2500
 for video in videos:
     readfile = os.path.join(readpath, video)
+	# https://superuser.com/questions/835904/combining-two-ffmpeg-fillters-or-commands-into-single-command
     call(["ffmpeg", "-i", readfile,
           "-vf", "select='eq(n\,1000)+eq(n\,1804)+eq(n\,2130)', scale=640:360", # Separate multiple vf with commas
           "-vsync", "0",
