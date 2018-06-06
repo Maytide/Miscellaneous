@@ -5,10 +5,10 @@
 import random
 
 
-class Edge():
-    def __init__(self, src, dest):
-        self.src = src
-        self.dest = dest
+# class Edge():
+#     def __init__(self, src, dest):
+#         self.src = src
+#         self.dest = dest
 
 class Graph():
     def __init__(self, edges, V, E):
@@ -25,14 +25,6 @@ class Subset():
         self.parent = parent
         self.rank = rank
 
-    # Check equality by object, not by object attributes
-    # def __eq__(self, other):
-    #     return self.parent == other.parent and \
-    #             self.rank == other.rank
-
-    # def __ne__(self, other):
-    #     return not self == other
-
 def karger_min_cut(graph):
     V, E, edges = graph.V, graph.E, graph.edges
 
@@ -42,34 +34,34 @@ def karger_min_cut(graph):
 
     while num_vertices > 2:
         i = random.randint(0, E-1)
-        subset1 = find(subsets, edges[i].src)
-        subset2 = find(subsets, edges[i].dest)
-        print(subset1, subset2)
-        if subset1 == subset2: continue
+        subset1 = find(subsets, edges[i][0])
+        subset2 = find(subsets, edges[i][1])
         
-        print('Contracting edge %d-%d' % (edges[i].src, edges[i].dest))
-        print('Remaining vertices: %d' % (num_vertices))
+        if subset1 == subset2: 
+            # print('Trying to find two nodes in diff subsets:', num_vertices, edges[i][0], edges[i][1])
+            continue
+
         num_vertices -= 1
         union(subsets, subset1, subset2)
 
     cutedges = 0
-    sg1_edge_list = set()
-    sg2_edge_list = set()
-    sg1_parent = None
+    sg1_edge_list = []
+    sg2_edge_list = []
+    sg1_edge_list_parent = None
     for i in range(E):
-        subset1 = find(subsets, edges[i].src)
-        subset2 = find(subsets, edges[i].dest)
+        subset1 = find(subsets, edges[i][0])
+        subset2 = find(subsets, edges[i][1])
         if subset1 != subset2:
             cutedges += 1
         else:
             if len(sg1_edge_list) == 0:
-                sg1_edge_list.add(edges[i])
-                sg1_parent = subset1
+                sg1_edge_list.append(edges[i])
+                sg1_edge_list_parent = subset1
             elif len(sg1_edge_list) > 0:
-                if sg1_parent == subset1 == subset2:
-                    sg1_edge_list.add(edges[i])
+                if sg1_edge_list_parent == subset1 == subset2:
+                    sg1_edge_list.append(edges[i])
                 else:
-                    sg2_edge_list.add(edges[i])
+                    sg2_edge_list.append(edges[i])
 
     return cutedges, sg1_edge_list, sg2_edge_list
 
@@ -98,7 +90,7 @@ def union(subsets, x, y):
 
 def create_graph(V, E, edge_list):
     assert E == len(edge_list)
-    edges = [Edge(a, b) for a, b in edge_list]
+    edges = [(a, b) for a, b in edge_list]
     graph = Graph(edges, V, E)
 
     return graph
@@ -109,7 +101,10 @@ def create_graph_from_file(fname):
     edge_list = []
     with open(fname) as f:
         for line in f.readlines():
-            a, b = line.split(' ')
+            if line.strip()[0] == '#':
+                continue
+            a, b = line.split()
+            # print(a, b)
             edge_list.append((int(a), int(b)))
             E += 1
             if a not in vertices:
@@ -124,7 +119,7 @@ def node_map(edge_list):
     enumerated_edge_list = [] # List of edges, with nodes mapped from zero -> num_nodes-1
     enumeration_map_fwd = {}
     enumeration_map_inv = {}
-    for a, b in enumerate(edge_list):
+    for a, b in edge_list:
         if a not in enumeration_map_fwd:
             enumeration_map_fwd[a] = node_counter
             enumeration_map_inv[node_counter] = a
@@ -140,40 +135,45 @@ def node_map(edge_list):
     return enumerated_edge_list, enumeration_map_inv, node_counter
 
 # edge_list = set([(0,1), (0,2), (0,3), (1,3), (2,3)])
-edge_list = [
-    (1, 2), (1, 5), (1, 6),
-    (2, 3), (2, 5), (2, 6),
-    (3, 4), (3, 7), (3, 8),
-    (4, 7), (4, 8),
-    (5, 6),
-    (6, 7),
-    (7, 8)
-]
-
-# edge_list = [list(edge) for edge in edge_list]
-# for i in range(len(edge_list)):
-#     edge_list[i][0] -= 1
-#     edge_list[i][1] -= 1
+# -----------------------------
+# edge_list = [
+#     (1, 2), (1, 5), (1, 6),
+#     (2, 3), (2, 5), (2, 6),
+#     (3, 4), (3, 7), (3, 8),
+#     (4, 7), (4, 8),
+#     (5, 6),
+#     (6, 7),
+#     (7, 8)
+# ]
+# -----------------------------
+# V, E = 8, len(edge_list)
+V, E, edge_list = create_graph_from_file('as20000102.txt')
 
 edge_list, enumeration_map_inv, num_nodes = node_map(edge_list)
 print(edge_list)
 
-V, E = 8, len(edge_list)
-# V, E, edge_list = create_graph_from_file('facebook_combined.txt')
-min_cut = E
-
-g = create_graph(V, E, edge_list)
-
 n = 30
+min_cut = E
+min_sg1_edge_list = None
+min_sg2_edge_list = None
+g = create_graph(V, E, edge_list)
 for i in range(n):
-    cut, sg1, sg2 = karger_min_cut(g)
-    print("Cut found by Karger's randomized algo is %d\n"
-           % cut)
-    print('subgraph1:', sg1)
-    print('subgraph2:', sg2)
+    print('Iteration i:', i, min_cut)
+    cut, sg1_edge_list, sg2_edge_list = karger_min_cut(g)
+    # print("Cut found by Karger's randomized algo is %d\n"
+    #        % cut)
+    # print('subgraph1:', sg1_edge_list)
+    # print('subgraph2:', sg2_edge_list)
 
     if cut < min_cut:
         min_cut = cut
+        sg1_enumerated_edge_list, sg1_enumeration_map_inv, sg1_node_counter \
+            = node_map(sg1_edge_list)
+        # g1 = Graph(sg1_enumerated_edge_list, sg1_node_counter, len(sg1_enumerated_edge_list))
+        
+        sg2_enumerated_edge_list, sg2_enumeration_map_inv, sg2_node_counter \
+            = node_map(sg2_edge_list)
 
-
+        print('new best sg1:', sg1_enumerated_edge_list[:10])
+        print('new best sg2:', sg2_enumerated_edge_list[:10])
 
