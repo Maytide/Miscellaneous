@@ -25,7 +25,7 @@ class Subset():
         self.parent = parent
         self.rank = rank
 
-def karger_min_cut(graph):
+def karger_min_cut(graph, verbose=False):
     V, E, edges = graph.V, graph.E, graph.edges
 
     subsets = [Subset(i, 0) for i in range(V)]
@@ -42,6 +42,8 @@ def karger_min_cut(graph):
             continue
 
         num_vertices -= 1
+        if num_vertices % 250 == 0 and verbose:
+            print(num_vertices)
         union(subsets, subset1, subset2)
 
     cutedges = 0
@@ -90,7 +92,7 @@ def union(subsets, x, y):
 
 def create_graph(V, E, edge_list):
     assert E == len(edge_list)
-    edges = [(a, b) for a, b in edge_list]
+    edges = [(a, b) for a, b in edge_list if a != b]
     graph = Graph(edges, V, E)
 
     return graph
@@ -105,8 +107,9 @@ def create_graph_from_file(fname):
                 continue
             a, b = line.split()
             # print(a, b)
-            edge_list.append((int(a), int(b)))
-            E += 1
+            if a != b: 
+                edge_list.append((int(a), int(b)))
+                E += 1
             if a not in vertices:
                 vertices.add(a)
             if b not in vertices:
@@ -145,12 +148,13 @@ def node_map(edge_list):
 #     (6, 7),
 #     (7, 8)
 # ]
-# -----------------------------
 # V, E = 8, len(edge_list)
-V, E, edge_list = create_graph_from_file('as20000102.txt')
+# -----------------------------
+# V, E, edge_list = create_graph_from_file('as20000102.txt')
+V, E, edge_list = create_graph_from_file('facebook_combined.txt')
 
 edge_list, enumeration_map_inv, num_nodes = node_map(edge_list)
-print(edge_list)
+print(edge_list[:10])
 
 n = 30
 min_cut = E
@@ -159,7 +163,7 @@ min_sg2_edge_list = None
 g = create_graph(V, E, edge_list)
 for i in range(n):
     print('Iteration i:', i, min_cut)
-    cut, sg1_edge_list, sg2_edge_list = karger_min_cut(g)
+    cut, sg1_edge_list, sg2_edge_list = karger_min_cut(g, verbose=False)
     # print("Cut found by Karger's randomized algo is %d\n"
     #        % cut)
     # print('subgraph1:', sg1_edge_list)

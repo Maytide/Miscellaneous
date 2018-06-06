@@ -1,4 +1,4 @@
-Implementation of:
+Implementation of Aggregated Momentum: Stability Through Passive Damping:
 
 https://arxiv.org/pdf/1804.00325.pdf
 
