@@ -15,6 +15,9 @@ class Graph():
         self.edges = edges
         self.V = V
         self.E = E
+
+    # def is_highly_connected(self):
+    #     return self.E / 2 <= self.V
     
     def print(self):
         for edge in self.edges:
@@ -137,47 +140,119 @@ def node_map(edge_list):
         
     return enumerated_edge_list, enumeration_map_inv, node_counter
 
-# edge_list = set([(0,1), (0,2), (0,3), (1,3), (2,3)])
-# -----------------------------
-# edge_list = [
-#     (1, 2), (1, 5), (1, 6),
-#     (2, 3), (2, 5), (2, 6),
-#     (3, 4), (3, 7), (3, 8),
-#     (4, 7), (4, 8),
-#     (5, 6),
-#     (6, 7),
-#     (7, 8)
-# ]
-# V, E = 8, len(edge_list)
-# -----------------------------
-# V, E, edge_list = create_graph_from_file('as20000102.txt')
-V, E, edge_list = create_graph_from_file('facebook_combined.txt')
+def merge_graphs(e1, e2):
+    # enumerated_edge_list, _, node_counter = node_map(e1 + e2)
+    node_counter = 0
+    enumerated_edge_list = [] # List of edges, with nodes mapped from zero -> num_nodes-1
+    enumeration_map_fwd = {}
+    for a, b in e1:
+        if a not in enumeration_map_fwd:
+            enumeration_map_fwd[a] = node_counter
+            node_counter += 1
 
-edge_list, enumeration_map_inv, num_nodes = node_map(edge_list)
-print(edge_list[:10])
+        if b not in enumeration_map_fwd:
+            enumeration_map_fwd[b] = node_counter
+            node_counter += 1
 
-n = 30
-min_cut = E
-min_sg1_edge_list = None
-min_sg2_edge_list = None
-g = create_graph(V, E, edge_list)
-for i in range(n):
-    print('Iteration i:', i, min_cut)
-    cut, sg1_edge_list, sg2_edge_list = karger_min_cut(g, verbose=False)
-    # print("Cut found by Karger's randomized algo is %d\n"
-    #        % cut)
-    # print('subgraph1:', sg1_edge_list)
-    # print('subgraph2:', sg2_edge_list)
+        enumerated_edge_list.append((enumeration_map_fwd[a], enumeration_map_fwd[b])) 
 
-    if cut < min_cut:
-        min_cut = cut
-        sg1_enumerated_edge_list, sg1_enumeration_map_inv, sg1_node_counter \
-            = node_map(sg1_edge_list)
-        # g1 = Graph(sg1_enumerated_edge_list, sg1_node_counter, len(sg1_enumerated_edge_list))
-        
-        sg2_enumerated_edge_list, sg2_enumeration_map_inv, sg2_node_counter \
-            = node_map(sg2_edge_list)
+    # Don't reset node counter
+    enumeration_map_fwd = {}
+    for a, b in e2:
+        if a not in enumeration_map_fwd:
+            enumeration_map_fwd[a] = node_counter
+            node_counter += 1
 
-        print('new best sg1:', sg1_enumerated_edge_list[:10])
-        print('new best sg2:', sg2_enumerated_edge_list[:10])
+        if b not in enumeration_map_fwd:
+            enumeration_map_fwd[b] = node_counter
+            node_counter += 1
 
+        enumerated_edge_list.append((enumeration_map_fwd[a], enumeration_map_fwd[b])) 
+
+    return enumerated_edge_list, node_counter
+
+
+def mincut(g, n=25):
+    min_cut = g.E
+    min_g1 = None
+    min_g2 = None
+    sg1_enumeration_map_inv = None
+    sg2_enumeration_map_inv = None
+    
+    for i in range(n):
+        # print('Iteration i:', i, min_cut)
+        cut, sg1_edge_list, sg2_edge_list = karger_min_cut(g, verbose=False)
+        # print("Cut found by Karger's randomized algo is %d\n"
+        #        % cut)
+        # print('subgraph1:', sg1_edge_list)
+        # print('subgraph2:', sg2_edge_list)
+
+        if cut <= min_cut:
+            min_cut = cut
+            sg1_enumerated_edge_list, sg1_enumeration_map_inv, sg1_node_counter \
+                = node_map(sg1_edge_list)
+            # g1 = Graph(sg1_enumerated_edge_list, sg1_node_counter, len(sg1_enumerated_edge_list))
+            
+            sg2_enumerated_edge_list, sg2_enumeration_map_inv, sg2_node_counter \
+                = node_map(sg2_edge_list)
+
+            # print('new best sg1:', sg1_enumerated_edge_list[:10])
+            # print('new best sg2:', sg2_enumerated_edge_list[:10])
+            min_g1 = Graph(sg1_enumerated_edge_list, sg1_node_counter, len(sg1_enumerated_edge_list))
+            min_g2 = Graph(sg2_enumerated_edge_list, sg2_node_counter, len(sg2_enumerated_edge_list))
+            if min_cut < 2:
+                break
+    
+    return min_cut, min_g1, min_g2, sg1_enumeration_map_inv, sg2_enumeration_map_inv
+
+if __name__ == '__main__':
+    # edge_list = set([(0,1), (0,2), (0,3), (1,3), (2,3)])
+    # -----------------------------
+    # edge_list = [
+    #     (1, 2), (1, 5), (1, 6),
+    #     (2, 3), (2, 5), (2, 6),
+    #     (3, 4), (3, 7), (3, 8),
+    #     (4, 7), (4, 8),
+    #     (5, 6),
+    #     (6, 7),
+    #     (7, 8)
+    # ]
+    # V, E = 8, len(edge_list)
+    # edge_list, enumeration_map_inv, num_nodes = node_map(edge_list)
+    # -----------------------------
+    e1 = [
+        (1, 2), (1, 5), (1, 6),
+        (2, 3), (2, 5), (2, 6),
+        (3, 4), (3, 7), (3, 8),
+        (4, 7), (4, 8),
+        (5, 6),
+        (6, 7),
+        (7, 8),
+    ]
+    e2 = [
+        (1, 2), (1, 5), (1, 6),
+        (2, 3), (2, 5), (2, 6),
+        (3, 4), (3, 7), (3, 8),
+        (4, 7), (4, 8),
+        (5, 6),
+        (6, 7),
+        (7, 8),
+    ]
+    edge_list, V = merge_graphs(e1, e2)
+    edge_list.extend([
+        (0, 7),
+        (2, 9),
+        (4, 10),
+        (8, 11)
+    ])
+    E = len(edge_list)
+    print(edge_list)
+    # -----------------------------
+    # V, E, edge_list = create_graph_from_file('as20000102.txt')
+    # V, E, edge_list = create_graph_from_file('facebook_combined.txt')
+    # edge_list, enumeration_map_inv, num_nodes = node_map(edge_list)
+    # -----------------------------
+
+    print(edge_list[:10])
+    g = create_graph(V, E, edge_list)
+    mincut(g)
