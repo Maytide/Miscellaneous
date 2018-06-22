@@ -1,6 +1,6 @@
 # Mosaic Enroller
 
-Automate attempts to enroll in mosaic when the class is full. **Not a web-based solution**: requires full attention of the computer. Will run indefinitely (ie, does not stop when enrolment is successful, because I was too lazy to add that)
+Automate attempts to enroll in mosaic when the class is full. **Not a web-based solution: requires full attention of the computer.** It is window-size invariant, but probably doesn't work well in extreme cases. Will run indefinitely (ie, does not stop when enrolment is successful, because I was too lazy to add that)
 
 ## Instructions:
 0. Install python and all the library dependencies. 
@@ -9,9 +9,12 @@ Automate attempts to enroll in mosaic when the class is full. **Not a web-based 
 3. Run 
 ```
 python mosaic_enroller.py
-``` then quickly return to the browser with mosaic open.
+``` 
+then quickly return to the browser with mosaic open.
+
 4. Leave the computer be. If you want it to enroll quicker per attempt, play with the 
-```time.sleep()``` values.
+```time.sleep()``` 
+values.
 
 Screen 1: 
 ![alt text](https://i.imgur.com/lLz4jzy.png)
