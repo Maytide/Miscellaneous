@@ -4,6 +4,8 @@ Automate attempts to enroll in mosaic when the class is full. **Not a web-based 
 
 It requires the three template images of the buttons (highlighted in red in below images), which aren't hard to make. Or PM me if interested.
 
+Source of most of the template matching: https://www.pyimagesearch.com/2015/01/26/multi-scale-template-matching-using-python-opencv/
+
 ## Instructions:
 0. Install python and all the library dependencies. 
 1. Make sure the courses are in your shopping cart.
