@@ -17,12 +17,12 @@ then quickly return to the browser with mosaic open.
 values.
 
 Screen 1: 
-![alt text](https://i.imgur.com/lLz4jzy.png)
+![alt text](https://i.imgur.com/tLOMg33.png)
 
 Screen 2: 
-![alt text](https://i.imgur.com/Qn3mtST.png)
+![alt text](https://i.imgur.com/SXEm7y4.png)
 
 Screen 3: 
-![alt text](https://i.imgur.com/VPi5Nnl.png)
+![alt text](https://i.imgur.com/tHZRekg.png)
 
 It requires the three template images of the buttons (highlighted in red), which aren't hard to make. Or PM me if interested.
