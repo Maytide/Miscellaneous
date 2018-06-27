@@ -32,11 +32,14 @@ def try_enroll():
     }
     mode = 'init'
    
-
+    count = 0
     while keep_trying:
+        
         if mode != 'finish_enrolling.png':
             time.sleep(4)
         else:
+            print('Attempt #:', count)
+            count += 1
             time.sleep(10)
         # Had to move this block above time.sleep to take screenshot properly???
         # for template in templates:
@@ -87,7 +90,7 @@ def try_enroll():
 
         # draw a bounding box around the detected result and display the image
         # display_found_image(mode, reference, startX, startY, endX, endY)
-        write_found_image(mode, reference, startX, startY, endX, endY)
+        # write_found_image(mode, reference, startX, startY, endX, endY)
         # keep_trying = False
 
 if __name__ == '__main__':
