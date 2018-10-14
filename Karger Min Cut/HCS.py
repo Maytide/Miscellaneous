@@ -4,19 +4,22 @@ from KargerMinCut import *
 def is_highly_connected(g, min_cut):
     return min_cut >= g.E/2
 
-
-def HCS(g):
-    print(g.E, g.V)
+def HCS(g, depth=0):
     # if g.is_highly_connected():
     #     g.print()
+    if g.V == 0:
+        print(depth, g.E, g.V)
+        g.print()
+        return g
     
     min_cut, h1, h2, inv_map1, inv_map2 = mincut(g)
     if is_highly_connected(g, min_cut):
+        print(depth, g.E, g.V)
         g.print()
         return g
 
-    HCS(h1)
-    HCS(h2)
+    HCS(h1, depth=depth+1)
+    HCS(h2, depth=depth+1)
 
 if __name__ == '__main__':
     e1 = [
