@@ -6,6 +6,7 @@ A = [.5 .2 .3;
      .4 .2 .4];
 f = 0;
 b = reshape(A', [9 1]);
+b = [b; 1];
 
 id = eye(3);
 v = perms([1 2 3]);
@@ -16,9 +17,10 @@ for i=1:6
     Pi = id(p,:)
     P(:,i) = reshape(Pi',[9 1]);
 end
+P = [P; ones(1,6)];
 
-P
 x = linprog([],[],[],P,b)
+sum(x)
 
 X = zeros(3,3);
 for i=1:6
